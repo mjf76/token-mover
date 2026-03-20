@@ -8,10 +8,6 @@
   "action": {
     "title": "Token Mover",
     "icon": "icon.svg",
-    "popover": {
-      "url": "/",
-      "height": 500,
-      "width": 380
-    }
+    "popover": "/"
   }
 }
