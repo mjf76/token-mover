@@ -78,39 +78,49 @@ body {
 #step-center {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 3px;
+}
+
+#step-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: rgba(15, 52, 96, 0.85);
   border: 2px solid rgba(74, 144, 217, 0.7);
-  border-radius: 10px;
-  font-size: 0.7rem;
-  color: #e2b96f;
-  line-height: 1.3;
-  text-align: center;
+  border-radius: 8px;
+  padding: 2px;
 }
 
 #step-count {
   font-size: 1rem;
   font-weight: bold;
   color: #e2b96f;
+  line-height: 1.2;
 }
 
 #step-distance {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: #ccc;
+  text-align: center;
+  line-height: 1.2;
 }
 
 #btn-reset {
-  display: block;
-  margin: 6px auto 0;
-  padding: 4px 16px;
+  width: 100%;
+  padding: 3px 0;
   background: rgba(22, 33, 62, 0.85);
   border: 1px solid #e2b96f;
   border-radius: 6px;
   color: #e2b96f;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
+  font-weight: bold;
   cursor: pointer;
   touch-action: manipulation;
+  letter-spacing: 0.05em;
 }
 
 #btn-reset:active {
