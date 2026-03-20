@@ -6,7 +6,7 @@
     "title": "Token Mover",
     "icon": "/icon.svg",
     "popover": "https://mjf76.github.io/token-mover/index.html",
-    "height": 500,
-    "width": 380
+    "height": 280,
+    "width": 320
   }
 }
