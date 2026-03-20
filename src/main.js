@@ -18,10 +18,8 @@ OBR.onReady(async () => {
   loading.classList.add("hidden");
   main.classList.remove("hidden");
 
-  const scenaPronte = await OBR.scene.isReady();
-  if (scenaPronte) {
-    await inizializza();
-  }
+  // Aspetta che la scena sia pronta con polling
+  await aspettaScena();
 
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
@@ -30,32 +28,47 @@ OBR.onReady(async () => {
       dpad.classList.add("hidden");
       notFound.classList.add("hidden");
       selectedTokenId = null;
+      tokenNameLabel.textContent = "";
     }
   });
 });
 
-async function inizializza() {
-  const nomeGiocatore = await OBR.player.getName();
-  playerNameLabel.textContent = "Giocatore: " + nomeGiocatore;
-
-  const items = await OBR.scene.items.getItems(
-    (item) => item.layer === "CHARACTER"
-  );
-
-  const mioToken = items.find(
-    (item) => item.name.toLowerCase().trim() === nomeGiocatore.toLowerCase().trim()
-  );
-
-  if (mioToken) {
-    selectedTokenId = mioToken.id;
-    tokenNameLabel.textContent = "🧙 " + mioToken.name;
-    notFound.classList.add("hidden");
-    dpad.classList.remove("hidden");
+async function aspettaScena() {
+  // Controlla ogni 500ms finché la scena non è pronta
+  const pronta = await OBR.scene.isReady();
+  if (pronta) {
+    await inizializza();
   } else {
-    selectedTokenId = null;
-    tokenNameLabel.textContent = "";
-    dpad.classList.add("hidden");
-    notFound.classList.remove("hidden");
+    setTimeout(aspettaScena, 500);
+  }
+}
+
+async function inizializza() {
+  try {
+    const nomeGiocatore = await OBR.player.getName();
+    playerNameLabel.textContent = "Giocatore: " + nomeGiocatore;
+
+    const items = await OBR.scene.items.getItems(
+      (item) => item.layer === "CHARACTER"
+    );
+
+    const mioToken = items.find(
+      (item) => item.name.toLowerCase().trim() === nomeGiocatore.toLowerCase().trim()
+    );
+
+    if (mioToken) {
+      selectedTokenId = mioToken.id;
+      tokenNameLabel.textContent = "🧙 " + mioToken.name;
+      notFound.classList.add("hidden");
+      dpad.classList.remove("hidden");
+    } else {
+      selectedTokenId = null;
+      tokenNameLabel.textContent = "";
+      dpad.classList.add("hidden");
+      notFound.classList.remove("hidden");
+    }
+  } catch(e) {
+    setTimeout(inizializza, 500);
   }
 }
 
@@ -78,8 +91,10 @@ function aggiornaContapassi(diagonale) {
 async function centraViewport() {
   try {
     if (!selectedTokenId) return;
+    const scenaPronte = await OBR.scene.isReady();
+    if (!scenaPronte) return;
     const items = await OBR.scene.items.getItems([selectedTokenId]);
-    if (items.length > 0 && OBR.viewport && OBR.viewport.animateTo) {
+    if (items.length > 0) {
       const scale = await OBR.viewport.getScale();
       await OBR.viewport.animateTo({
         target: items[0].position,
@@ -96,15 +111,19 @@ async function muoviToken(dx, dy) {
 
   const diagonale = dx !== 0 && dy !== 0;
 
-  await OBR.scene.items.updateItems([selectedTokenId], (items) => {
-    for (const item of items) {
-      item.position.x += dx * GRID_SIZE;
-      item.position.y += dy * GRID_SIZE;
-    }
-  });
+  try {
+    await OBR.scene.items.updateItems([selectedTokenId], (items) => {
+      for (const item of items) {
+        item.position.x += dx * GRID_SIZE;
+        item.position.y += dy * GRID_SIZE;
+      }
+    });
 
-  aggiornaContapassi(diagonale);
-  await centraViewport();
+    aggiornaContapassi(diagonale);
+    await centraViewport();
+  } catch(e) {
+    // errore movimento
+  }
 }
 
 document.getElementById("btn-up").addEventListener("click", () => muoviToken(0, -1));
