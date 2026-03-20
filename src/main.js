@@ -9,7 +9,6 @@ const loading = document.getElementById("loading");
 const main = document.getElementById("main");
 const dpad = document.getElementById("dpad");
 const notFound = document.getElementById("not-found");
-const playerNameLabel = document.getElementById("player-name-label");
 const tokenNameLabel = document.getElementById("token-name-label");
 const stepCount = document.getElementById("step-count");
 const stepDistance = document.getElementById("step-distance");
@@ -18,8 +17,10 @@ OBR.onReady(async () => {
   loading.classList.add("hidden");
   main.classList.remove("hidden");
 
-  // Aspetta che la scena sia pronta con polling
-  await aspettaScena();
+  const scenaPronte = await OBR.scene.isReady();
+  if (scenaPronte) {
+    await inizializza();
+  }
 
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
@@ -34,7 +35,6 @@ OBR.onReady(async () => {
 });
 
 async function aspettaScena() {
-  // Controlla ogni 500ms finché la scena non è pronta
   const pronta = await OBR.scene.isReady();
   if (pronta) {
     await inizializza();
@@ -46,7 +46,6 @@ async function aspettaScena() {
 async function inizializza() {
   try {
     const nomeGiocatore = await OBR.player.getName();
-    playerNameLabel.textContent = "Giocatore: " + nomeGiocatore;
 
     const items = await OBR.scene.items.getItems(
       (item) => item.layer === "CHARACTER"
@@ -101,16 +100,12 @@ async function centraViewport() {
         scale: scale,
       });
     }
-  } catch(e) {
-    // viewport non disponibile su questo client
-  }
+  } catch(e) {}
 }
 
 async function muoviToken(dx, dy) {
   if (!selectedTokenId) return;
-
   const diagonale = dx !== 0 && dy !== 0;
-
   try {
     await OBR.scene.items.updateItems([selectedTokenId], (items) => {
       for (const item of items) {
@@ -118,12 +113,9 @@ async function muoviToken(dx, dy) {
         item.position.y += dy * GRID_SIZE;
       }
     });
-
     aggiornaContapassi(diagonale);
     await centraViewport();
-  } catch(e) {
-    // errore movimento
-  }
+  } catch(e) {}
 }
 
 document.getElementById("btn-up").addEventListener("click", () => muoviToken(0, -1));
@@ -134,10 +126,6 @@ document.getElementById("btn-upleft").addEventListener("click", () => muoviToken
 document.getElementById("btn-upright").addEventListener("click", () => muoviToken(1, -1));
 document.getElementById("btn-downleft").addEventListener("click", () => muoviToken(-1, 1));
 document.getElementById("btn-downright").addEventListener("click", () => muoviToken(1, 1));
-
-document.getElementById("btn-center").addEventListener("click", async () => {
-  await centraViewport();
-});
 
 document.getElementById("btn-reset").addEventListener("click", () => {
   passiRetti = 0;
