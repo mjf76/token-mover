@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Token Mover</title>
-    <script type="module" crossorigin src="./assets/index-GaKM-X7L.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BEEcGxmm.css">
+    <script type="module" crossorigin src="./assets/index-BAjxw22I.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-dlOkuNpj.css">
   </head>
   <body>
     <div id="app">
@@ -14,11 +14,10 @@
       </div>
       <div id="main" class="hidden">
         <div id="player-info">
-          <span id="player-name-label"></span>
           <span id="token-name-label"></span>
         </div>
         <div id="not-found" class="hidden">
-          <p>⚠️ Nessun token trovato con il tuo nome.<br>Chiedi al DM di rinominare il tuo token!</p>
+          <p>⚠️ Token non trovato.<br>Chiedi al DM di rinominare il tuo token!</p>
         </div>
         <div id="dpad" class="hidden">
           <div class="dpad-grid">
@@ -26,17 +25,16 @@
             <button id="btn-up">⬆️</button>
             <button id="btn-upright">↗️</button>
             <button id="btn-left">⬅️</button>
-            <button id="btn-center">📍</button>
+            <div id="step-center">
+              <div id="step-count">0</div>
+              <div id="step-distance">0 ft<br>0 m</div>
+            </div>
             <button id="btn-right">➡️</button>
             <button id="btn-downleft">↙️</button>
             <button id="btn-down">⬇️</button>
             <button id="btn-downright">↘️</button>
           </div>
-          <div id="step-counter">
-            <span>Passi: <strong id="step-count">0</strong></span>
-            <span>Distanza: <strong id="step-distance">0 ft / 0 m</strong></span>
-            <button id="btn-reset">🔄 Reset</button>
-          </div>
+          <button id="btn-reset">🔄 Reset passi</button>
         </div>
       </div>
     </div>
