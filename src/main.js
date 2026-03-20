@@ -13,13 +13,11 @@ OBR.onReady(async () => {
   loading.classList.add("hidden");
   main.classList.remove("hidden");
 
-  // Aspetta che la scena sia pronta
   const scenaGiaPronte = await OBR.scene.isReady();
   if (scenaGiaPronte) {
     await caricaToken();
   }
 
-  // Reagisce quando la scena diventa pronta/non pronta
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
       await caricaToken();
@@ -29,31 +27,38 @@ OBR.onReady(async () => {
     }
   });
 
-  // Aggiorna quando i token cambiano
   OBR.scene.items.onChange(() => {
     caricaToken();
   });
 });
 
 async function caricaToken() {
-  const items = await OBR.scene.items.getItems(
-    (item) => item.layer === "CHARACTER"
-  );
+  // DEBUG: prende TUTTI gli item senza filtri
+  const tuttiItems = await OBR.scene.items.getItems();
 
   const valorePrecedente = tokenList.value;
   tokenList.innerHTML = '<option value="">-- seleziona il tuo token --</option>';
 
-  items.forEach((item) => {
+  if (tuttiItems.length === 0) {
+    const option = document.createElement("option");
+    option.textContent = "⚠️ Nessun item trovato nella scena";
+    option.disabled = true;
+    tokenList.appendChild(option);
+    return;
+  }
+
+  // Mostra TUTTI gli item con il loro layer per debug
+  tuttiItems.forEach((item) => {
     const option = document.createElement("option");
     option.value = item.id;
-    option.textContent = item.name || "Token senza nome";
+    option.textContent = `[${item.layer}] ${item.name || "senza nome"}`;
     tokenList.appendChild(option);
   });
 
   if (valorePrecedente) {
     tokenList.value = valorePrecedente;
     if (tokenList.value) {
-      mostraDpad(valorePrecedente, items.find(i => i.id === valorePrecedente)?.name);
+      mostraDpad(valorePrecedente, tuttiItems.find(i => i.id === valorePrecedente)?.name);
     }
   }
 }
