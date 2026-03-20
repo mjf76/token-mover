@@ -8,17 +8,26 @@ const main = document.getElementById("main");
 const tokenList = document.getElementById("token-list");
 const dpad = document.getElementById("dpad");
 const tokenName = document.getElementById("token-name");
+const debug = document.getElementById("debug");
+
+function log(msg) {
+  debug.innerHTML += msg + "<br>";
+}
 
 OBR.onReady(async () => {
+  log("✅ OBR pronto");
   loading.classList.add("hidden");
   main.classList.remove("hidden");
 
-  const scenaGiaPronte = await OBR.scene.isReady();
-  if (scenaGiaPronte) {
+  const scenaPronte = await OBR.scene.isReady();
+  log("🎬 Scena pronta: " + scenaPronte);
+
+  if (scenaPronte) {
     await caricaToken();
   }
 
   OBR.scene.onReadyChange(async (ready) => {
+    log("🔄 Scena cambio stato: " + ready);
     if (ready) {
       await caricaToken();
     } else {
@@ -28,38 +37,35 @@ OBR.onReady(async () => {
   });
 
   OBR.scene.items.onChange(() => {
+    log("🔁 Items cambiati");
     caricaToken();
   });
 });
 
 async function caricaToken() {
-  // DEBUG: prende TUTTI gli item senza filtri
-  const tuttiItems = await OBR.scene.items.getItems();
+  try {
+    const tuttiItems = await OBR.scene.items.getItems();
+    log("📦 Items trovati: " + tuttiItems.length);
+    tuttiItems.forEach(i => log("  → [" + i.layer + "] " + (i.name || "senza nome")));
 
-  const valorePrecedente = tokenList.value;
-  tokenList.innerHTML = '<option value="">-- seleziona il tuo token --</option>';
+    const valorePrecedente = tokenList.value;
+    tokenList.innerHTML = '<option value="">-- seleziona il tuo token --</option>';
 
-  if (tuttiItems.length === 0) {
-    const option = document.createElement("option");
-    option.textContent = "⚠️ Nessun item trovato nella scena";
-    option.disabled = true;
-    tokenList.appendChild(option);
-    return;
-  }
+    tuttiItems.forEach((item) => {
+      const option = document.createElement("option");
+      option.value = item.id;
+      option.textContent = "[" + item.layer + "] " + (item.name || "senza nome");
+      tokenList.appendChild(option);
+    });
 
-  // Mostra TUTTI gli item con il loro layer per debug
-  tuttiItems.forEach((item) => {
-    const option = document.createElement("option");
-    option.value = item.id;
-    option.textContent = `[${item.layer}] ${item.name || "senza nome"}`;
-    tokenList.appendChild(option);
-  });
-
-  if (valorePrecedente) {
-    tokenList.value = valorePrecedente;
-    if (tokenList.value) {
-      mostraDpad(valorePrecedente, tuttiItems.find(i => i.id === valorePrecedente)?.name);
+    if (valorePrecedente) {
+      tokenList.value = valorePrecedente;
+      if (tokenList.value) {
+        mostraDpad(valorePrecedente, tuttiItems.find(i => i.id === valorePrecedente)?.name);
+      }
     }
+  } catch(e) {
+    log("❌ Errore: " + e.message);
   }
 }
 
@@ -78,7 +84,7 @@ tokenList.addEventListener("change", (e) => {
 function mostraDpad(id, nome) {
   selectedTokenId = id;
   dpad.classList.remove("hidden");
-  tokenName.textContent = `Token selezionato: ${nome}`;
+  tokenName.textContent = "Token selezionato: " + nome;
 }
 
 async function muoviToken(dx, dy) {
@@ -101,7 +107,7 @@ document.getElementById("btn-center").addEventListener("click", async () => {
   if (items.length > 0) {
     const t = items[0];
     await OBR.notification.show(
-      `📍 ${t.name} — X: ${Math.round(t.position.x)}, Y: ${Math.round(t.position.y)}`,
+      "📍 " + t.name + " — X: " + Math.round(t.position.x) + ", Y: " + Math.round(t.position.y),
       "INFO"
     );
   }
