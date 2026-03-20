@@ -2,8 +2,9 @@ import OBR from "@owlbear-rodeo/sdk";
 
 const GRID_SIZE = 150;
 let selectedTokenId = null;
-let passiRetti = 0;
 let passiDiagonali = 0;
+let passiTotali = 0;
+let ftTotali = 0;
 
 const loading = document.getElementById("loading");
 const main = document.getElementById("main");
@@ -74,16 +75,21 @@ async function inizializza() {
 function aggiornaContapassi(diagonale) {
   if (diagonale) {
     passiDiagonali++;
+    if (passiDiagonali % 2 === 0) {
+      // Seconda diagonale: vale doppio
+      passiTotali += 2;
+      ftTotali += 10;
+    } else {
+      // Prima diagonale: normale
+      passiTotali += 1;
+      ftTotali += 5;
+    }
   } else {
-    passiRetti++;
+    passiTotali += 1;
+    ftTotali += 5;
   }
 
-  // D&D 5e: 1a diagonale = 5ft, 2a = 10ft, 3a = 5ft, 4a = 10ft...
-  const ftDiagonali = Math.ceil(passiDiagonali / 2) * 5 + Math.floor(passiDiagonali / 2) * 10;
-  const ftTotali = passiRetti * 5 + ftDiagonali;
   const mTotali = (ftTotali * 0.3).toFixed(1);
-  const passiTotali = passiRetti + passiDiagonali;
-
   stepCount.textContent = passiTotali;
   stepDistance.textContent = ftTotali + " ft / " + mTotali + " m";
 }
@@ -129,8 +135,9 @@ document.getElementById("btn-downleft").addEventListener("click", () => muoviTok
 document.getElementById("btn-downright").addEventListener("click", () => muoviToken(1, 1));
 
 document.getElementById("btn-reset").addEventListener("click", () => {
-  passiRetti = 0;
   passiDiagonali = 0;
+  passiTotali = 0;
+  ftTotali = 0;
   stepCount.textContent = "0";
   stepDistance.textContent = "0 ft / 0 m";
 });
