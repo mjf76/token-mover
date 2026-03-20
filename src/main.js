@@ -42,7 +42,6 @@ async function inizializza() {
     (item) => item.layer === "CHARACTER"
   );
 
-  // Cerca token il cui nome corrisponde al nome del giocatore
   const mioToken = items.find(
     (item) => item.name.toLowerCase().trim() === nomeGiocatore.toLowerCase().trim()
   );
@@ -67,7 +66,6 @@ function aggiornaContapassi(diagonale) {
     passiRetti++;
   }
 
-  // Regola DnD 5e: ogni 2 passi diagonali vale 10ft invece di 5ft
   const ftDiagonali = Math.floor(passiDiagonali / 2) * 10 + (passiDiagonali % 2) * 5;
   const ftTotali = passiRetti * 5 + ftDiagonali;
   const mTotali = (ftTotali * 0.3).toFixed(1);
@@ -75,6 +73,22 @@ function aggiornaContapassi(diagonale) {
 
   stepCount.textContent = passiTotali;
   stepDistance.textContent = ftTotali + " ft / " + mTotali + " m";
+}
+
+async function centraViewport() {
+  try {
+    if (!selectedTokenId) return;
+    const items = await OBR.scene.items.getItems([selectedTokenId]);
+    if (items.length > 0 && OBR.viewport && OBR.viewport.animateTo) {
+      const scale = await OBR.viewport.getScale();
+      await OBR.viewport.animateTo({
+        target: items[0].position,
+        scale: scale,
+      });
+    }
+  } catch(e) {
+    // viewport non disponibile su questo client
+  }
 }
 
 async function muoviToken(dx, dy) {
@@ -90,15 +104,7 @@ async function muoviToken(dx, dy) {
   });
 
   aggiornaContapassi(diagonale);
-
-  // Centra la visuale sul token
-  const items = await OBR.scene.items.getItems([selectedTokenId]);
-  if (items.length > 0) {
-    await OBR.viewport.animateTo({
-      target: items[0].position,
-      scale: await OBR.viewport.getScale(),
-    });
-  }
+  await centraViewport();
 }
 
 document.getElementById("btn-up").addEventListener("click", () => muoviToken(0, -1));
@@ -111,14 +117,7 @@ document.getElementById("btn-downleft").addEventListener("click", () => muoviTok
 document.getElementById("btn-downright").addEventListener("click", () => muoviToken(1, 1));
 
 document.getElementById("btn-center").addEventListener("click", async () => {
-  if (!selectedTokenId) return;
-  const items = await OBR.scene.items.getItems([selectedTokenId]);
-  if (items.length > 0) {
-    await OBR.viewport.animateTo({
-      target: items[0].position,
-      scale: await OBR.viewport.getScale(),
-    });
-  }
+  await centraViewport();
 });
 
 document.getElementById("btn-reset").addEventListener("click", () => {
