@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token Mover</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="loading">
+        <p>⏳ Connessione a Owlbear Rodeo...</p>
+      </div>
+      <div id="main" class="hidden">
+        <h2>🧙 Token Mover</h2>
+        <div id="token-selector">
+          <label>Scegli il tuo token:</label>
+          <select id="token-list">
+            <option value="">-- seleziona --</option>
+          </select>
+        </div>
+        <div id="dpad" class="hidden">
+          <div class="dpad-grid">
+            <div></div>
+            <button id="btn-up">⬆️</button>
+            <div></div>
+            <button id="btn-left">⬅️</button>
+            <button id="btn-center">📍</button>
+            <button id="btn-right">➡️</button>
+            <div></div>
+            <button id="btn-down">⬇️</button>
+            <div></div>
+          </div>
+          <p id="token-name"></p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

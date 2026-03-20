@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #1a1a2e;
+  color: #eee;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  color: #e2b96f;
+}
+
+#loading {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+#token-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+#token-selector label {
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+#token-list {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #e2b96f;
+  background: #16213e;
+  color: #eee;
+  cursor: pointer;
+}
+
+.dpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.dpad-grid button {
+  width: 70px;
+  height: 70px;
+  font-size: 1.8rem;
+  border: none;
+  border-radius: 12px;
+  background: #16213e;
+  color: white;
+  cursor: pointer;
+  border: 2px solid #e2b96f;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+
+.dpad-grid button:active {
+  background: #e2b96f;
+  color: #1a1a2e;
+}
+
+#btn-center {
+  background: #0f3460 !important;
+}
+
+#token-name {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.hidden {
+  display: none !important;
+}
