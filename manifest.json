@@ -1,13 +1,12 @@
 {
-  "id": "it.tokenmover.extension",
   "name": "Token Mover",
   "version": "1.0.0",
-  "manifest_version": 2,
-  "description": "Muovi il tuo token con un D-Pad da smartphone",
-  "author": "mjf76",
+  "manifest_version": 1,
   "action": {
     "title": "Token Mover",
-    "icon": "icon.svg",
-    "popover": "https://mjf76.github.io/token-mover/"
+    "icon": "/icon.svg",
+    "popover": "/",
+    "height": 500,
+    "width": 380
   }
 }
