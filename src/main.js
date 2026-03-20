@@ -78,7 +78,8 @@ function aggiornaContapassi(diagonale) {
     passiRetti++;
   }
 
-  const ftDiagonali = Math.floor(passiDiagonali / 2) * 10 + (passiDiagonali % 2) * 5;
+  // D&D 5e: 1a diagonale = 5ft, 2a = 10ft, 3a = 5ft, 4a = 10ft...
+  const ftDiagonali = Math.ceil(passiDiagonali / 2) * 5 + Math.floor(passiDiagonali / 2) * 10;
   const ftTotali = passiRetti * 5 + ftDiagonali;
   const mTotali = (ftTotali * 0.3).toFixed(1);
   const passiTotali = passiRetti + passiDiagonali;
