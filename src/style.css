@@ -87,7 +87,7 @@ body {
 }
 
 #step-box {
-  flex: 3;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,13 +113,13 @@ body {
 }
 
 #btn-reset {
-  flex: 1;
+  flex: 0 0 20px;
   width: 100%;
   background: rgba(22, 33, 62, 0.85);
   border: 1px solid #e2b96f;
   border-radius: 6px;
   color: #e2b96f;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: bold;
   cursor: pointer;
   touch-action: manipulation;
