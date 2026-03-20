@@ -5,7 +5,7 @@
   "action": {
     "title": "Token Mover",
     "icon": "/icon.svg",
-    "popover": "https://mjf76.github.io/token-mover/",
+    "popover": "https://mjf76.github.io/token-mover/index.html",
     "height": 500,
     "width": 380
   }
