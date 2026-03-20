@@ -8,26 +8,17 @@ const main = document.getElementById("main");
 const tokenList = document.getElementById("token-list");
 const dpad = document.getElementById("dpad");
 const tokenName = document.getElementById("token-name");
-const debug = document.getElementById("debug");
-
-function log(msg) {
-  debug.innerHTML += msg + "<br>";
-}
 
 OBR.onReady(async () => {
-  log("✅ OBR pronto");
   loading.classList.add("hidden");
   main.classList.remove("hidden");
 
   const scenaPronte = await OBR.scene.isReady();
-  log("🎬 Scena pronta: " + scenaPronte);
-
   if (scenaPronte) {
     await caricaToken();
   }
 
   OBR.scene.onReadyChange(async (ready) => {
-    log("🔄 Scena cambio stato: " + ready);
     if (ready) {
       await caricaToken();
     } else {
@@ -37,35 +28,30 @@ OBR.onReady(async () => {
   });
 
   OBR.scene.items.onChange(() => {
-    log("🔁 Items cambiati");
     caricaToken();
   });
 });
 
 async function caricaToken() {
-  try {
-    const tuttiItems = await OBR.scene.items.getItems();
-    log("📦 Items trovati: " + tuttiItems.length);
-    tuttiItems.forEach(i => log("  → [" + i.layer + "] " + (i.name || "senza nome")));
+  const items = await OBR.scene.items.getItems(
+    (item) => item.layer === "CHARACTER"
+  );
 
-    const valorePrecedente = tokenList.value;
-    tokenList.innerHTML = '<option value="">-- seleziona il tuo token --</option>';
+  const valorePrecedente = tokenList.value;
+  tokenList.innerHTML = '<option value="">-- seleziona il tuo token --</option>';
 
-    tuttiItems.forEach((item) => {
-      const option = document.createElement("option");
-      option.value = item.id;
-      option.textContent = "[" + item.layer + "] " + (item.name || "senza nome");
-      tokenList.appendChild(option);
-    });
+  items.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = item.name || "Token senza nome";
+    tokenList.appendChild(option);
+  });
 
-    if (valorePrecedente) {
-      tokenList.value = valorePrecedente;
-      if (tokenList.value) {
-        mostraDpad(valorePrecedente, tuttiItems.find(i => i.id === valorePrecedente)?.name);
-      }
+  if (valorePrecedente) {
+    tokenList.value = valorePrecedente;
+    if (tokenList.value) {
+      mostraDpad(valorePrecedente, items.find(i => i.id === valorePrecedente)?.name);
     }
-  } catch(e) {
-    log("❌ Errore: " + e.message);
   }
 }
 
