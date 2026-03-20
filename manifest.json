@@ -4,7 +4,7 @@
   "manifest_version": 1,
   "action": {
     "title": "Token Mover",
-    "icon": "/icon.svg",
+    "icon": "https://mjf76.github.io/token-mover/icon.svg",
     "popover": "https://mjf76.github.io/token-mover/index.html",
     "height": 280,
     "width": 320
