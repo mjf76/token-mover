@@ -8,6 +8,6 @@
   "action": {
     "title": "Token Mover",
     "icon": "icon.svg",
-    "popover": "/"
+    "popover": "https://mjf76.github.io/token-mover/"
   }
 }
